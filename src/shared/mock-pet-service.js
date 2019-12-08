@@ -1,9 +1,30 @@
 class ItemService {
     constructor() {
         this.items = [
-            {link:1, name:"test1", summary:"Summary Test 1", year:"2001", country:"us", price:"1000", description:"Desc 1"},
-            {link:2, name:"test2", summary:"Summary Test 2", year:"2002", country:"uk", price:"2000", description:"Desc 2"},
-            {link:3, name:"test3", summary:"Summary Test 3", year:"2003", country:"cz", price:"3000", description:"Desc 3"},
+            {
+                "id": 1,
+                "age": 1,
+                "name": "ALEX",
+                "price": 50
+            },
+            {
+                "id": 2,
+                "age": 2,
+                "name": "BOB",
+                "price": 40
+            },
+            {
+                "id": 3,
+                "age": 1,
+                "name": "JOHN",
+                "price": 50
+            },
+            {
+                "id": 4,
+                "age": 2,
+                "name": "TED",
+                "price": 40
+            }
         ];
     }
     async retrieveItems() {
