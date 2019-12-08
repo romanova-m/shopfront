@@ -31,14 +31,15 @@ class ItemService {
         return Promise.resolve(this.items);
     }
     async getItem(itemLink) {
-        for(var i = 0; i < this.items.length; i++) {
-            if ( this.items[i].link === itemLink) {
+        for(let i = 0; i < this.items.length; i++) {
+            if ( this.items[i].id === itemLink) {
                 return Promise.resolve(this.items[i]);
             }
         }
         return null;
     }
     async createItem(item) {
+        item.id = this.items.length;
         console.log("ItemService.createItem():");
         console.log(item);
         return Promise.resolve(item);
