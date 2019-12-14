@@ -5,7 +5,9 @@
     src: url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
 }
 
-.App {
-    margin: 20pt;
-    font-family: 'Raleway', sans-serif;
+.Cart {
+    font-family: 'Ralelway', sans-serif;
+}
+
+.App-header {
 }

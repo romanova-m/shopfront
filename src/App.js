@@ -3,7 +3,15 @@ import './App.css';
 import ItemDetails from './ItemDetails';
 import NewItem from './NewItem';
 import EditItem from './EditItem';
-import ItemService from './shared/mock-pet-service';
+import ItemService from './shared/pet-service';
+import 'antd/dist/antd.css';
+import { Icon } from "antd";
+import { Avatar } from "antd";
+import { Button } from "antd";
+import { Row } from 'antd';
+import { Col } from 'antd';
+import { Typography } from 'antd';
+const { Title } = Typography;
 
 
 class App extends Component {
@@ -38,22 +46,31 @@ class App extends Component {
     const newItem = this.state.newItem;
     const editItem = this.state.editItem;
     const listItems = items.map((item) =>
+        <Col span={6} >
         <li key={item.id} onClick={() => this.onSelect(item.id)}>
+          <Avatar size={"large"} icon="user" />
           <span className="item-name">{item.name}</span> |  {item.price}
         </li>
+        </Col>
     );
     return (
         <div className="App">
-          <h2>Available pets</h2>
+          <Title level={2}>Available pets</Title>
           <ul className="items">
+            <Row gutter={[0, 60]}>
+              <Col span={19}>
             {listItems}
+              </Col>
+              <Col span={4} style={{textAlign: "right"}} >
+                <Button name="button" onClick={() => this.onNewItem()}><Icon type="plus" /></Button>
+                <div style={{textAlign: "left"}} >
+                {newItem && <NewItem onSubmit={this.onCreateItem} onCancel={this.onCancel}/>}
+                {showDetails && selectedItem && <ItemDetails item={selectedItem} onEdit={this.onEditItem}  onDelete={this.onDeleteItem} />}
+                {editItem && selectedItem && <EditItem onSubmit={this.onUpdateItem} onCancel={this.onCancelEdit} item={selectedItem} />}
+                </div>
+              </Col>
+            </Row>
           </ul>
-          <br/>
-          <button type="button" name="button" onClick={() => this.onNewItem()}>New Item</button>
-          <br/>
-          {newItem && <NewItem onSubmit={this.onCreateItem} onCancel={this.onCancel}/>}
-          {showDetails && selectedItem && <ItemDetails item={selectedItem} onEdit={this.onEditItem}  onDelete={this.onDeleteItem} />}
-          {editItem && selectedItem && <EditItem onSubmit={this.onUpdateItem} onCancel={this.onCancelEdit} item={selectedItem} />}
         </div>
     );
   }
@@ -65,9 +82,9 @@ class App extends Component {
     );
   }
 
-  onSelect(itemLink) {
+  onSelect(itemId) {
     this.clearState();
-    this.itemService.getItem(itemLink).then(item => {
+    this.itemService.getItem(itemId).then(item => {
           this.setState({
             showDetails: true,
             selectedItem: item

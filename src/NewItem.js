@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
 import Validator from './shared/Validator';
+import { Icon } from "antd";
+import { Button } from "antd";
+
 class NewItem extends Component {
     constructor(props) {
         super(props);
@@ -50,8 +53,8 @@ class NewItem extends Component {
                     </label>
                 </div>
                 <br/>
-                <button onClick={() => this.onCancel()}>Cancel</button>
-                <button onClick={() => this.onSubmit()}>Create</button>
+                <Button type="primary" onClick={() => this.onSubmit()}><Icon type="check" /></Button>
+                <Button onClick={() => this.onCancel()}><Icon type="close" /></Button>
             </div>
         );
     }

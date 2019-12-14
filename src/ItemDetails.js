@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
+import { Icon } from "antd";
+import { Button } from "antd";
+
 class ItemDetails extends Component {
     constructor(props) {
         super(props);
@@ -15,8 +18,8 @@ class ItemDetails extends Component {
                 <div><span className="field-name">Age:</span><br/> {item.age}</div>
                 <div><span className="field-name">Price:</span><br/> {item.price}</div>
                 <br/>
-                <button onClick={() => this.onDelete()}>Delete</button>
-                <button onClick={() => this.onEdit()}>Edit</button>
+                <Button type="danger" onClick={() => this.onDelete()}><Icon type="delete" /></Button>
+                <Button onClick={() => this.onEdit()}><Icon type="edit" /></Button>
             </div>
         );
     }

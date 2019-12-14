@@ -1,26 +1,14 @@
-class ItemService {
+class CartService {
     constructor() {
         this.items = [
             {
-                "id": 1,
-                "age": 1,
-                "name": "Муся",
-                "price": 50
-            },
-            {
-                "id": 2,
-                "age": 2,
-                "name": "Бобик",
-                "price": 40
-            },
-            {
                 "id": 3,
                 "age": 1,
-                "name": "Вася",
+                "name": "JOHN",
                 "price": 50
             },
             {
-                "id": 4,
+                "id": 7,
                 "age": 2,
                 "name": "TED",
                 "price": 40
@@ -37,42 +25,6 @@ class ItemService {
                 "name": "BOB",
                 "price": 40
             },
-            {
-                "id": 7,
-                "age": 1,
-                "name": "JOHN",
-                "price": 50
-            },
-            {
-                "id": 8,
-                "age": 2,
-                "name": "Коля",
-                "price": 40
-            },
-            {
-                "id": 9,
-                "age": 1,
-                "name": "Степа",
-                "price": 50
-            },
-            {
-                "id": 10,
-                "age": 2,
-                "name": "Макс",
-                "price": 40
-            },
-            {
-                "id": 11,
-                "age": 1,
-                "name": "JOHN",
-                "price": 50
-            },
-            {
-                "id": 12,
-                "age": 2,
-                "name": "Таня",
-                "price": 40
-            }
         ];
     }
     async retrieveItems() {
@@ -101,4 +53,4 @@ class ItemService {
         console.log(item);
     }
 }
-export default ItemService;
+export default CartService
