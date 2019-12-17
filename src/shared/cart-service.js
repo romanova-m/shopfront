@@ -1,13 +1,16 @@
 import Configuration from './configuration';
-class PetService {
+import ItemService from "./pet-service";
+class CartService {
     constructor() {
         this.config = new Configuration();
+        this.itemService = new ItemService(); // CHANGE
     }
     async retrieveItems() {
-        return fetch(this.config.ITEM_COLLECTION_URL, {
+        return fetch(this.config.CART_COLLECTION_URL, {
             method: "GET",
             mode: "cors",
-            headers: {}
+            headers: {
+            }
         })
             .then(response => {
                 if (!response.ok) {
@@ -16,16 +19,11 @@ class PetService {
                 return response.json();
             })
             .then(json => {
-                console.log("Retrieved items:");
+                console.log("Cart retrieved items:");
                 console.log(json);
                 const items = [];
-                //const itemArray = json._embedded.collectionItems;
-                //console.log(itemArray);
-                //for(let i = 0; i < itemArray.length; i++) {
-                //    itemArray[i]["link"] =  itemArray[i].link.self.href;
-                //    items.push(itemArray[i]);
-                //}
-                for(let i = 0; i < json.length; i++) {
+                for (let i = 0; i < json.length; i++) {
+                    //json[i].link.self.href= json[i].id;
                     items.push(json[i]);
                 }
                 return items;
@@ -37,7 +35,10 @@ class PetService {
     async getItem(itemId) {
         console.log("ItemService.getItem():");
         console.log("Item: " + itemId);
-        return fetch(this.config.ITEM_COLLECTION_URL + "/" + itemId)
+        return fetch(this.config.CART_COLLECTION_URL + "/" + itemId, {
+            body:{
+                "userId": 1
+            }})
             .then(response => {
                 if (!response.ok) {
                     this.handleResponseError(response);
@@ -53,17 +54,17 @@ class PetService {
                 this.handleError(error);
             });
     }
-    async createItem(newitem) {
+    async createItem(item) {
         console.log("ItemService.createItem():");
-        console.log(newitem);
-        return fetch(this.config.ITEM_COLLECTION_URL, {
+        console.log(item);
+        return fetch(this.config.CART_COLLECTION_URL, {
             method: "PUT",
             mode: "cors",
             headers: {
                 "Content-Type": "application/json",
                 //"Authorization": "Bearer MiB1c2Vy.NzVkMGY5ZjM4NTY0MGY4YWRmMTIzZjNjNjlmYWY3MjljYjczZmFhYWMyODFlMzIzMzhhMjVmNjc4OGUwYzQyOQ=="
             },
-            body: JSON.stringify(newitem)
+            body: JSON.stringify(item)
         })
             .then(response => {
                 if (!response.ok) {
@@ -78,7 +79,7 @@ class PetService {
     async deleteItem(itemId) {
         console.log("ItemService.deleteItem():");
         console.log("item: " + itemId);
-        return fetch(this.config.ITEM_COLLECTION_URL + "/" + itemId, {
+        return fetch(this.config.CART_COLLECTION_URL + "/" + itemId, {
             method: "DELETE",
             mode: "cors"
         })
@@ -91,10 +92,25 @@ class PetService {
                 this.handleError(error);
             });
     }
+    async post() {
+        console.log("CartService.post();");
+        return fetch(this.config.CART_COLLECTION_URL, {
+            method: "POST",
+            mode: "cors"
+        })
+            .then(response => {
+                if (!response.ok) {
+                    this.handleResponseError(response);
+                }
+            })
+            .catch(error => {
+                this.handleError(error);
+            });
+    }
     async updateItem(item) {
-        console.log("ItemService.updateItem():");
+        console.log("CartService.updateItem():");
         console.log(item);
-        return fetch(this.config.ITEM_COLLECTION_URL + "/" + item.id, {
+        return fetch(this.config.CART_COLLECTION_URL + "/" + item.id, {
             method: "PUT",
             mode: "cors",
             headers: {
@@ -119,4 +135,4 @@ class PetService {
         console.log(error.message);
     }
 }
-export default PetService;
+export default CartService;

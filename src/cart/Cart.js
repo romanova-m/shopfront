@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
 import './Cart.css';
 import ItemDetails from '../ItemDetails';
-import NewItem from '../NewItem';
-import EditItem from '../EditItem';
-import ItemService from '../shared/mock-cart-service';
+import CartService from '../shared/cart-service';
 import { Icon } from "antd";
 import { Button } from "antd";
 import 'antd/dist/antd.css';
+import ItemService from "../shared/pet-service";
 
 
 class Cart extends Component {
     constructor(props) {
         super(props);
         this.itemService = new ItemService();
+        this.cartService = new CartService();
         this.onSelect = this.onSelect.bind(this);
         this.onNewItem = this.onNewItem.bind(this);
+        this.onPost = this.onPost.bind(this);
         this.onEditItem = this.onEditItem.bind(this);
         this.onCancel = this.onCancel.bind(this);
         this.onCancelEdit = this.onCancelEdit.bind(this);
@@ -25,7 +26,7 @@ class Cart extends Component {
             showDetails: false,
             editItem: false,
             selectedItem: null,
-            newItem: null
+            newItem: null,
         }
     }
 
@@ -36,41 +37,49 @@ class Cart extends Component {
     render() {
         const items = this.state.items;
         if(!items) return null;
+        const cart = true;
         const showDetails = this.state.showDetails;
         const selectedItem = this.state.selectedItem;
-        const newItem = this.state.newItem;
-        const editItem = this.state.editItem;
         const listItems = items.map((item) =>
             <li key={item.id} onClick={() => this.onSelect(item.id)}>
-                <span className="item-name">{item.name}</span> |  {item.age}
+                <span className="item-name">
+                    {this.props.parentItems.map(parentItems => parentItems.id === item.item_id? parentItems.name : "")}
+                </span> |  {this.props.parentItems.map(parentItems => parentItems.id === item.item_id? parentItems.price : "")}
             </li>
         );
         return (
             <div className="Cart">
                 <h2>Your cart</h2>
-                <ul className="items">
+                <ol className="items">
                     {listItems}
-                </ul>
+                </ol>
                 <br/>
-                <Button type="primary" name="button" onClick={() => this.onNewItem()}><Icon type="shopping-cart" /></Button>
+                <Button type="primary" name="button" onClick={() => this.onPost()}><Icon type="shopping-cart" /></Button>
                 <br/>
-                {newItem && <NewItem onSubmit={this.onCreateItem} onCancel={this.onCancel}/>}
-                {showDetails && selectedItem && <ItemDetails item={selectedItem} onEdit={this.onEditItem}  onDelete={this.onDeleteItem} />}
-                {editItem && selectedItem && <EditItem onSubmit={this.onUpdateItem} onCancel={this.onCancelEdit} item={selectedItem} />}
-            </div>
+                {showDetails && selectedItem && <ItemDetails item={selectedItem} onEdit={null} onDelete={this.onDeleteItem} onCart={null} isCart={cart} />}
+                </div>
         );
     }
 
     getItems() {
-        this.itemService.retrieveItems().then(items => {
-                this.setState({items: items});
-            }
-        );
+        let item_ids = [];
+        this.cartService.retrieveItems().then(items => {
+            this.clearState();
+            this.setState({
+                items: items
+            })
+        });
+
     }
 
-    onSelect(itemLink) {
+    onSelect(id) {
         this.clearState();
-        this.itemService.getItem(itemLink).then(item => {
+        let item_id;
+        for (let i = 0; i < this.state.items.length; i++) {
+            if (this.state.items[i].id === id) item_id = this.state.items[i].item_id;
+        }
+        this.itemService.getItem(item_id).then(item => {
+                item.id = id;
                 this.setState({
                     showDetails: true,
                     selectedItem: item
@@ -108,23 +117,36 @@ class Cart extends Component {
 
     onUpdateItem(item) {
         this.clearState();
-        this.itemService.updateItem(item).then(item => {
+        this.cartService.updateItem(item).then(item => {
                 this.getItems();
             }
         );
     }
 
-    onCreateItem(newItem) {
+    onCreateItem(itemId) {
+        console.log("creating item {}", itemId);
+        let newItem = {
+            "item_id": itemId,
+            "user_id": 1
+        };
         this.clearState();
-        this.itemService.createItem(newItem).then(item => {
+        this.cartService.createItem(newItem).then(item => {
                 this.getItems();
             }
         );
     }
 
-    onDeleteItem(itemLink) {
+    onDeleteItem(id) {
         this.clearState();
-        this.itemService.deleteItem(itemLink).then(res => {
+        this.cartService.deleteItem(id).then(res => {
+                this.getItems();
+            }
+        );
+    }
+
+    onPost() {
+        this.clearState();
+        this.cartService.post().then(res => {
                 this.getItems();
             }
         );
@@ -139,5 +161,4 @@ class Cart extends Component {
         });
     }
 }
-
 export default Cart

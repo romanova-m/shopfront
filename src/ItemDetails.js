@@ -8,6 +8,7 @@ class ItemDetails extends Component {
         super(props);
         this.onEdit = this.onEdit.bind(this);
         this.onDelete = this.onDelete.bind(this);
+        this.onCart = this.onCart.bind(this);
     }
     render() {
         const item = this.props.item;
@@ -18,8 +19,9 @@ class ItemDetails extends Component {
                 <div><span className="field-name">Age:</span><br/> {item.age}</div>
                 <div><span className="field-name">Price:</span><br/> {item.price}</div>
                 <br/>
+                {!this.props.isCart && <Button onClick={() => this.onCart()}><Icon type="shopping-cart" /></Button>}
+                {!this.props.isCart && <Button onClick={() => this.onEdit()}><Icon type="edit" /></Button>}
                 <Button type="danger" onClick={() => this.onDelete()}><Icon type="delete" /></Button>
-                <Button onClick={() => this.onEdit()}><Icon type="edit" /></Button>
             </div>
         );
     }
@@ -28,9 +30,13 @@ class ItemDetails extends Component {
     }
     onDelete() {
         const item = this.props.item;
-        if(window.confirm("Are you sure to delete item: " + item.name + " ?")) {
+        if(this.props.isCart || window.confirm("Are you sure to delete item: " + item.name + " ?")) {
             this.props.onDelete(item.id);
         }
+    }
+    onCart() {
+        const item = this.props.item;
+        this.props.onCart(item.id);
     }
 }
 export default ItemDetails

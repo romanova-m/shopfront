@@ -3,28 +3,9 @@ class CartService {
         this.items = [
             {
                 "id": 3,
-                "age": 1,
-                "name": "JOHN",
-                "price": 50
-            },
-            {
-                "id": 7,
-                "age": 2,
-                "name": "TED",
-                "price": 40
-            },
-            {
-                "id": 5,
-                "age": 1,
-                "name": "Джон",
-                "price": 50
-            },
-            {
-                "id": 6,
-                "age": 2,
-                "name": "BOB",
-                "price": 40
-            },
+                "user_id": 1,
+                "item_id": 1,
+            }
         ];
     }
     async retrieveItems() {
@@ -40,17 +21,20 @@ class CartService {
     }
     async createItem(item) {
         item.id = this.items.length;
-        console.log("ItemService.createItem():");
+        console.log("CartService.createItem():");
         console.log(item);
         return Promise.resolve(item);
     }
     async deleteItem(itemId) {
-        console.log("ItemService.deleteItem():");
+        console.log("CartService.deleteItem():");
         console.log("item ID:" + itemId);
     }
     async updateItem(item) {
-        console.log("ItemService.updateItem():");
+        console.log("CartService.updateItem():");
         console.log(item);
+    }
+    async post() {
+        console.log("CartService.post();");
     }
 }
 export default CartService
