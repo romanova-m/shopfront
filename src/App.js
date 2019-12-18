@@ -11,11 +11,12 @@ import {Avatar} from "antd";
 import {Button} from "antd";
 import {Row} from 'antd';
 import {Col} from 'antd';
+import {Divider} from 'antd';
 import {Typography} from 'antd';
 import Cart from "./cart/Cart";
 
 const {Title} = Typography;
-const {Sider, Content} = Layout;
+const {Content} = Layout;
 
 
 class App extends Component {
@@ -36,6 +37,7 @@ class App extends Component {
             showDetails: false,
             editItem: false,
             selectedItem: null,
+            selectedStuff: null,
             newItem: null,
             cartOpen: true,
         }
@@ -47,54 +49,78 @@ class App extends Component {
 
     render() {
         const items = this.state.items;
+        const stuff = this.state.stuff;
         if (!items) return null;
+        if (!stuff) return null;
         const showDetails = this.state.showDetails;
+        const showDetailsStuff = this.state.showDetailsStuff;
         const selectedItem = this.state.selectedItem;
+        const selectedStuff = this.state.selectedStuff;
         const newItem = this.state.newItem;
         const editItem = this.state.editItem;
         const listItems = items.map((item) =>
             <Col span={6}>
-                <li key={item.id} onClick={() => this.onSelect(item.id)}>
+                <div key={item.id} onClick={() => this.onSelect(item.id)}>
                     <Avatar size={"large"} icon="user"/>
                     <span className="item-name">{item.name}</span> | {item.price}
-                </li>
+                </div>
+            </Col>
+        );
+        const listStuff = stuff.map((item) =>
+            <Col span={6}>
+                <div key={item.id} onClick={() => this.onSelectStuff(item.id)}>
+                    <Avatar size={"large"} icon="user"/>
+                    <span className="item-name">{item.name}</span> | {item.price}
+                </div>
             </Col>
         );
         return (
             <Layout>
                 <Content>
-                    <div className="App">
+                    <div>
                         <Title level={2}>Available pets</Title>
-                        <ul className="items">
-                            <Row gutter={[0, 60]}>
-                                {listItems}
-                            </Row>
-                            <Col span={6}>
-                                <Button name="button" onClick={() => this.onNewItem()}><Icon type="plus"/></Button>
-                                <div>
+                        <div className="items">
+                            <Layout>
+                                <Row gutter={[0, 60]}>
+                                    {listItems}
+                                </Row>
+                                <Row>
+                                    <br/>
+                                    <Button name="button" onClick={() => this.onNewItem()}><Icon type="plus"/></Button>
                                     {newItem && <NewItem onSubmit={this.onCreateItem} onCancel={this.onCancel}/>}
                                     {showDetails && selectedItem &&
                                     <ItemDetails item={selectedItem} onEdit={this.onEditItem}
                                                  onDelete={this.onDeleteItem}
-                                                 onCart={this.onCart} isCart={false}/>}
+                                                 onCart={this.onCart} isCart={false} isStuff={false}/>}
                                     {editItem && selectedItem &&
                                     <EditItem onSubmit={this.onUpdateItem} onCancel={this.onCancelEdit}
                                               item={selectedItem}/>}
-                                </div>
-                            </Col>
-                        </ul>
+                                </Row>
+                                <Divider/>
+                                <Title level={2}>Available stuff</Title>
+                                <Row gutter={[0, 60]}>
+                                    {listStuff}
+                                </Row>
+                                {showDetailsStuff && selectedStuff &&
+                                <ItemDetails item={selectedStuff} onEdit={null}
+                                             onDelete={null}
+                                             onCart={this.onCart} isCart={false} isStuff={true}/>}
+                            </Layout>
+                        </div>
                     </div>
                 </Content>
-                {this.state.cartOpen && <Sider style={{backgroundColor: "lavender"}}><Cart parentItems={this.state.items}/></Sider>}
+                {this.state.cartOpen && <Cart cartOpen={this.state.cartOpen} parentItems={Array.from(this.state.items).concat(Array.from(this.state.stuff))}/>}
             </Layout>
         );
     }
 
     getItems() {
+        this.itemService.retrieveStuff().then(items => {
+            this.setState({stuff: items});
+        });
         this.itemService.retrieveItems().then(items => {
-                this.setState({items: items});
-            }
-        );
+            this.setState({items: items});
+        });
     }
 
     onSelect(itemId) {
@@ -103,6 +129,17 @@ class App extends Component {
                 this.setState({
                     showDetails: true,
                     selectedItem: item
+                });
+            }
+        );
+    }
+
+    onSelectStuff(itemId) {
+        this.clearState();
+        this.itemService.getStuff(itemId).then(item => {
+                this.setState({
+                    showDetailsStuff: true,
+                    selectedStuff: item
                 });
             }
         );
@@ -123,8 +160,9 @@ class App extends Component {
 
     onNewItem() {
         this.clearState();
+        let flag = this.state.newItem;
         this.setState({
-            newItem: true
+            newItem: !flag
         });
     }
 

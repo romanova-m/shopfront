@@ -4,6 +4,37 @@ class PetService {
         this.config = new Configuration();
     }
     async retrieveItems() {
+        return fetch(this.config.PET_COLLECTION_URL, {
+            method: "GET",
+            mode: "cors",
+            headers: {}
+        })
+            .then(response => {
+                if (!response.ok) {
+                    this.handleResponseError(response);
+                }
+                return response.json();
+            })
+            .then(json => {
+                console.log("Retrieved items:");
+                console.log(json);
+                const items = [];
+                //const itemArray = json._embedded.collectionItems;
+                //console.log(itemArray);
+                //for(let i = 0; i < itemArray.length; i++) {
+                //    itemArray[i]["link"] =  itemArray[i].link.self.href;
+                //    items.push(itemArray[i]);
+                //}
+                for(let i = 0; i < json.length; i++) {
+                    items.push(json[i]);
+                }
+                return items;
+            })
+            .catch(error => {
+                this.handleError(error);
+            });
+    }
+    async retrieveStuff() {
         return fetch(this.config.ITEM_COLLECTION_URL, {
             method: "GET",
             mode: "cors",
@@ -37,7 +68,7 @@ class PetService {
     async getItem(itemId) {
         console.log("ItemService.getItem():");
         console.log("Item: " + itemId);
-        return fetch(this.config.ITEM_COLLECTION_URL + "/" + itemId)
+        return fetch(this.config.PET_COLLECTION_URL + "/" + itemId)
             .then(response => {
                 if (!response.ok) {
                     this.handleResponseError(response);
@@ -53,10 +84,29 @@ class PetService {
                 this.handleError(error);
             });
     }
+    async getStuff(itemId) {
+        console.log("ItemService.getItem():");
+        console.log("Item: " + itemId);
+        return fetch(this.config.ITEM_COLLECTION_URL + "/" + itemId)
+            .then(response => {
+                if (!response.ok) {
+                    this.handleResponseError(response);
+                }
+                return response.json();
+            })
+            .then(item => {
+                    console.log("Stuff: " + item);
+                    return item;
+                }
+            )
+            .catch(error => {
+                this.handleError(error);
+            });
+    }
     async createItem(newitem) {
         console.log("ItemService.createItem():");
         console.log(newitem);
-        return fetch(this.config.ITEM_COLLECTION_URL, {
+        return fetch(this.config.PET_COLLECTION_URL, {
             method: "PUT",
             mode: "cors",
             headers: {
@@ -78,7 +128,7 @@ class PetService {
     async deleteItem(itemId) {
         console.log("ItemService.deleteItem():");
         console.log("item: " + itemId);
-        return fetch(this.config.ITEM_COLLECTION_URL + "/" + itemId, {
+        return fetch(this.config.PET_COLLECTION_URL + "/" + itemId, {
             method: "DELETE",
             mode: "cors"
         })
@@ -94,7 +144,7 @@ class PetService {
     async updateItem(item) {
         console.log("ItemService.updateItem():");
         console.log(item);
-        return fetch(this.config.ITEM_COLLECTION_URL + "/" + item.id, {
+        return fetch(this.config.PET_COLLECTION_URL + "/" + item.id, {
             method: "PUT",
             mode: "cors",
             headers: {

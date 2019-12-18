@@ -1,11 +1,5 @@
-@font-face {
-    font-family: 'Raleway', sans-serif;
+.App {
+    font-family: 'Aargh', sans-serif;
     font-style: normal;
     font-weight: 400;
-    src: url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
-}
-
-.App {
-    margin: 20pt;
-    font-family: 'Raleway', sans-serif;
 }

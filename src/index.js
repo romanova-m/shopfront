@@ -10,7 +10,7 @@ const { Title } = Typography;
 const { Header, Footer } = Layout;
 
 ReactDOM.render([
-    <div>
+    <div className="App">
         <Layout style={{height: window.innerHeight}}>
             <Header style={{backgroundColor: "lightblue"}}><Title>Pet shop</Title></Header>
             <Layout>
@@ -18,8 +18,9 @@ ReactDOM.render([
             </Layout>
             <Footer> Footer </Footer>
         </Layout>
-    </div>,
+    </div>
     ], document.getElementById('root'));
+
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

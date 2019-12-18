@@ -1,9 +1,7 @@
 import Configuration from './configuration';
-import ItemService from "./pet-service";
 class CartService {
     constructor() {
         this.config = new Configuration();
-        this.itemService = new ItemService(); // CHANGE
     }
     async retrieveItems() {
         return fetch(this.config.CART_COLLECTION_URL, {
@@ -20,7 +18,6 @@ class CartService {
             })
             .then(json => {
                 console.log("Cart retrieved items:");
-                console.log(json);
                 const items = [];
                 for (let i = 0; i < json.length; i++) {
                     //json[i].link.self.href= json[i].id;

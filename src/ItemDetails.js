@@ -16,12 +16,12 @@ class ItemDetails extends Component {
             <div className="input-panel">
                 <span className="form-caption">{ item.name}</span>
                 <div><span className="field-name">Name:</span><br/> {item.name}</div>
-                <div><span className="field-name">Age:</span><br/> {item.age}</div>
+                {item.age && <div><span className="field-name">Age:</span><br/> {item.age}</div>}
                 <div><span className="field-name">Price:</span><br/> {item.price}</div>
                 <br/>
                 {!this.props.isCart && <Button onClick={() => this.onCart()}><Icon type="shopping-cart" /></Button>}
-                {!this.props.isCart && <Button onClick={() => this.onEdit()}><Icon type="edit" /></Button>}
-                <Button type="danger" onClick={() => this.onDelete()}><Icon type="delete" /></Button>
+                {!this.props.isCart && !this.props.isStuff && <Button onClick={() => this.onEdit()}><Icon type="edit" /></Button>}
+                {!this.props.isStuff && <Button type="danger" onClick={() => this.onDelete()}><Icon type="delete" /></Button>}
             </div>
         );
     }
