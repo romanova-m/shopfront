@@ -73,8 +73,8 @@ class Cart extends Component {
 
     getItems() {
         this.cartService.retrieveItems().then(items => {
-            if (items.length === 0) this.setState({cartOpen: false});
             this.clearState();
+            if (items.length === 0) this.setState({cartOpen: false});
             this.setState({
                 items: items
             })
